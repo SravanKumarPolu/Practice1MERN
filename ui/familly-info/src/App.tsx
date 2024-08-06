@@ -35,7 +35,7 @@ function App() {
         },
         body: JSON.stringify({
           name: newMemberName,
-          salary: newMemberWork,
+          work: newMemberWork,
         }),
       });
       refreshMembers();
