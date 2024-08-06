@@ -23,3 +23,16 @@ app.listen(PORT, () => {
   });
 });
 app.use(express.json());
+app.get("/api/image/GetInfo", (req, res) => {
+  database
+    .collection("imagecollection")
+    .find({})
+    .toArray((error, result) => {
+      if (error) {
+        console.error("Error fetching notes:", error);
+        res.status(500), json({ error: "Internal server error" });
+        return;
+      }
+      res.json(result);
+    });
+});
