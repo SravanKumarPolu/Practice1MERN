@@ -46,10 +46,10 @@ app.get("/api/familly/GetInfo", (req, res) => {
 });
 
 app.post("/api/familly/AddMembers", upload.single("image"), (req, res) => {
-  const { name, work } = req.body;
+  const { name, work, salary } = req.body;
   const imageBuffer = req.file?.buffer;
 
-  if (!name || !work) {
+  if (!name || !work || !salary) {
     res.status(400).json({ error: "Name and Work are required" });
     return;
   }
@@ -66,6 +66,7 @@ app.post("/api/familly/AddMembers", upload.single("image"), (req, res) => {
         id: (count + 1).toString(),
         name: name,
         work: work,
+        salary: salary,
         image: imageBuffer ? imageBuffer.toString("base64") : null,
       };
       database

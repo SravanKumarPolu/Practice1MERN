@@ -5,6 +5,7 @@ interface Member {
   id: string;
   name: string;
   work: string;
+  salary: number;
   image?: string; // Optional image field
 }
 
@@ -12,6 +13,7 @@ function App() {
   const [members, setMembers] = useState<Member[]>([]);
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberWork, setNewMemberWork] = useState("");
+  const [newMemberSalary, setNewMemberSalary] = useState("");
   const [newMemberImage, setNewMemberImage] = useState<File | null>(null);
   const API_URL = "http://localhost:5038/";
 
@@ -30,7 +32,7 @@ function App() {
   };
 
   const addClick = async () => {
-    if (!newMemberName || !newMemberWork) {
+    if (!newMemberName || !newMemberWork || !newMemberSalary) {
       console.error("Name and Work are required.");
       return;
     }
@@ -38,6 +40,7 @@ function App() {
     const formData = new FormData();
     formData.append("name", newMemberName);
     formData.append("work", newMemberWork);
+    formData.append("salary", newMemberSalary);
     if (newMemberImage) {
       formData.append("image", newMemberImage);
     }
@@ -53,6 +56,7 @@ function App() {
       refreshMembers();
       setNewMemberName("");
       setNewMemberWork("");
+      setNewMemberSalary("");
       setNewMemberImage(null);
     } catch (error) {
       console.error("Error adding member:", error);
@@ -99,6 +103,14 @@ function App() {
             setNewMemberImage(e.target.files ? e.target.files[0] : null)
           }
         />
+        <input
+          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          id="newMemberSalary"
+          placeholder="Salary..."
+          type="number"
+          value={newMemberSalary}
+          onChange={(e) => setNewMemberSalary(e.target.value)}
+        />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 shadow-sm"
           onClick={addClick}>
@@ -119,6 +131,7 @@ function App() {
           )}
           <span>{member.name}</span>
           <span>{member.work}</span>
+          <span>{member.salary}</span>
           <button
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
             onClick={() => deleteClick(member.id)}>
