@@ -81,7 +81,23 @@ app.post("/api/familly/AddMembers", upload.single("image"), (req, res) => {
         });
     });
 });
+app.put("/api/familly/UpdateMembers", (req, res) => {
+  const id = req.query.id;
+  const { name, salary, work } = req.body;
+  const updatedMember = { name, salary, work };
+  const imageBuffer = req.file?.buffer;
 
+  database
+    .collection("employeecollection")
+    .updateOne({ id: id }, { $set: updatedMember }, (err, result) => {
+      if (err) {
+        console.error("Error updating Member:", err);
+        res.status(500).send("Internal server error");
+        return;
+      }
+      res.status(200).send("Member updated successfully");
+    });
+});
 app.delete("/api/familly/DeleteMembers", (req, res) => {
   const memberId = req.query.id;
 
