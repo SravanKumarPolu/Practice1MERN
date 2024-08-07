@@ -5,12 +5,14 @@ interface Member {
   id: string;
   name: string;
   work: string;
+  image?: string; // Optional image field
 }
 
 function App() {
   const [members, setMembers] = useState<Member[]>([]);
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberWork, setNewMemberWork] = useState("");
+  const [newMemberImage, setNewMemberImage] = useState<File | null>(null);
   const API_URL = "http://localhost:5038/";
 
   useEffect(() => {
@@ -23,38 +25,51 @@ function App() {
       const data = await response.json();
       setMembers(data);
     } catch (error) {
-      console.error("Error fetching familly:", error);
+      console.error("Error fetching family:", error);
     }
   };
+
   const addClick = async () => {
+    if (!newMemberName || !newMemberWork) {
+      console.error("Name and Work are required.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", newMemberName);
+    formData.append("work", newMemberWork);
+    if (newMemberImage) {
+      formData.append("image", newMemberImage);
+    }
+
     try {
-      await fetch(API_URL + "api/familly/AddMembers", {
+      const response = await fetch(API_URL + "api/familly/AddMembers", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: newMemberName,
-          work: newMemberWork,
-        }),
+        body: formData,
       });
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
       refreshMembers();
       setNewMemberName("");
       setNewMemberWork("");
+      setNewMemberImage(null);
     } catch (error) {
-      console.error("Error adding Employee:", error);
+      console.error("Error adding member:", error);
     }
   };
+
   const deleteClick = async (id: string) => {
     try {
-      await fetch(API_URL + `api/familly/DeleteMembers?id=${id}`, {
+      await fetch(`${API_URL}api/familly/DeleteMembers?id=${id}`, {
         method: "DELETE",
       });
       refreshMembers();
     } catch (error) {
-      console.error("Error delete member:", error);
+      console.error("Error deleting member:", error);
     }
   };
+
   return (
     <>
       <h2 className="font-semibold text-3xl py-5 text-center">FAMILY Info</h2>
@@ -65,6 +80,7 @@ function App() {
           id="newMemberName"
           placeholder="Name..."
           type="text"
+          value={newMemberName}
           onChange={(e) => setNewMemberName(e.target.value)}
         />
         <input
@@ -72,7 +88,16 @@ function App() {
           id="newMemberWork"
           placeholder="Work..."
           type="text"
+          value={newMemberWork}
           onChange={(e) => setNewMemberWork(e.target.value)}
+        />
+        <input
+          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          id="newMemberImage"
+          type="file"
+          onChange={(e) =>
+            setNewMemberImage(e.target.files ? e.target.files[0] : null)
+          }
         />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 shadow-sm"
@@ -84,12 +109,18 @@ function App() {
       {members.map((member) => (
         <div
           key={member.id}
-          className="flex text-lg flex-col md:flex-row items-center justify-center text-center gap-5 w-full">
+          className="flex text-lg flex-col md:flex-row items-center justify-center text-center gap-5 w-full border-b py-2">
+          {member.image && (
+            <img
+              src={`data:image/png;base64,${member.image}`}
+              alt={member.name}
+              className="w-16 h-16 rounded-full"
+            />
+          )}
           <span>{member.name}</span>
           <span>{member.work}</span>
-
           <button
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600  shadow-sm"
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
             onClick={() => deleteClick(member.id)}>
             Delete
           </button>

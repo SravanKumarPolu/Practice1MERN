@@ -12,15 +12,21 @@ const CONNECTION_STRING =
 const DATABASE_NAME = "famillydb";
 let database;
 
+const upload = multer();
+
 app.listen(PORT, () => {
-  MongoClient.connect(CONNECTION_STRING, (error, client) => {
-    if (error) {
-      console.error("Error connecting to MongoDB:", error);
-      return;
+  MongoClient.connect(
+    CONNECTION_STRING,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    (error, client) => {
+      if (error) {
+        console.error("Error connecting to MongoDB:", error);
+        return;
+      }
+      database = client.db(DATABASE_NAME);
+      console.log("MongoDB Connection Successful");
     }
-    database = client.db(DATABASE_NAME);
-    console.log("MongoDB Connection Successful");
-  });
+  );
 });
 
 app.use(express.json());
@@ -29,20 +35,19 @@ app.get("/api/familly/GetInfo", (req, res) => {
   database
     .collection("famillycollection")
     .find({})
-    .toArray((error, result) => {
+    .toArray((error, documents) => {
       if (error) {
         console.error("Error fetching Info:", error);
         res.status(500).json({ error: "Internal server error" });
         return;
       }
-      res.json(result);
+      res.json(documents);
     });
 });
 
-app.post("/api/familly/AddMembers", multer().none(), (req, res) => {
+app.post("/api/familly/AddMembers", upload.single("image"), (req, res) => {
   const { name, work } = req.body;
-  console.log("New member name:", name);
-  console.log("New member work:", work);
+  const imageBuffer = req.file?.buffer;
 
   if (!name || !work) {
     res.status(400).json({ error: "Name and Work are required" });
@@ -61,6 +66,7 @@ app.post("/api/familly/AddMembers", multer().none(), (req, res) => {
         id: (count + 1).toString(),
         name: name,
         work: work,
+        image: imageBuffer ? imageBuffer.toString("base64") : null,
       };
       database
         .collection("famillycollection")
@@ -72,23 +78,6 @@ app.post("/api/familly/AddMembers", multer().none(), (req, res) => {
           }
           res.json({ message: "Added successfully" });
         });
-    });
-});
-
-app.put("/api/familly/UpdateMembers", (req, res) => {
-  const id = req.body.id;
-  const { name, work } = req.body;
-  const updatedMember = { name, work };
-
-  database
-    .collection("famillycollection")
-    .updateOne({ id: id }, { $set: updatedMember }, (err, result) => {
-      if (err) {
-        console.error("Error updating document:", err);
-        res.status(500).send("Internal server error");
-        return;
-      }
-      res.status(200).send("Member updated successfully");
     });
 });
 
