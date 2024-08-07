@@ -15,6 +15,12 @@ function App() {
   const [newMemberWork, setNewMemberWork] = useState("");
   const [newMemberSalary, setNewMemberSalary] = useState("");
   const [newMemberImage, setNewMemberImage] = useState<File | null>(null);
+
+  const [editMemberId, setEditMemberId] = useState<string | null>(null);
+  const [editMemberName, setEditMemberName] = useState("");
+  const [editMemberSalary, setEditMemberSalary] = useState("");
+  const [editMemberWork, setEditMemberWork] = useState("");
+  const [editMemberImage, setEditMemberImage] = useState<File | null>(null);
   const API_URL = "http://localhost:5038/";
 
   useEffect(() => {
@@ -63,6 +69,18 @@ function App() {
     }
   };
 
+  const editClick = (member: Member) => {
+    setEditMemberId(member.id);
+    setEditMemberName(member.name);
+    setEditMemberSalary(member.salary.toString());
+  };
+  const updateMember = async () => {
+    try {
+    } catch (error) {
+      console.error("Error updating member:", error);
+    }
+  };
+
   const deleteClick = async (id: string) => {
     try {
       await fetch(`${API_URL}api/familly/DeleteMembers?id=${id}`, {
@@ -95,14 +113,7 @@ function App() {
           value={newMemberWork}
           onChange={(e) => setNewMemberWork(e.target.value)}
         />
-        <input
-          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
-          id="newMemberImage"
-          type="file"
-          onChange={(e) =>
-            setNewMemberImage(e.target.files ? e.target.files[0] : null)
-          }
-        />
+
         <input
           className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
           id="newMemberSalary"
@@ -110,6 +121,14 @@ function App() {
           type="number"
           value={newMemberSalary}
           onChange={(e) => setNewMemberSalary(e.target.value)}
+        />
+        <input
+          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          id="newMemberImage"
+          type="file"
+          onChange={(e) =>
+            setNewMemberImage(e.target.files ? e.target.files[0] : null)
+          }
         />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 shadow-sm"
@@ -122,21 +141,75 @@ function App() {
         <div
           key={member.id}
           className="flex text-lg flex-col md:flex-row items-center justify-center text-center gap-5 w-full border-b py-2">
-          {member.image && (
-            <img
-              src={`data:image/png;base64,${member.image}`}
-              alt={member.name}
-              className="w-16 h-16 rounded-full"
-            />
+          {editMemberId === member.id ? (
+            <>
+              <div className="flex flex-col md:flex-row gap-5 items-center justify-center text-center w-full">
+                <input
+                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                  id="editMemberName"
+                  placeholder="Name..."
+                  type="text"
+                  value={editMemberName}
+                  onChange={(e) => setEditMemberName(e.target.value)}
+                />
+                <input
+                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                  id="editMemberWork"
+                  placeholder="Work..."
+                  type="text"
+                  value={editMemberWork}
+                  onChange={(e) => setEditMemberWork(e.target.value)}
+                />
+
+                <input
+                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                  id="editMemberSalary"
+                  placeholder="Salary..."
+                  type="number"
+                  value={editMemberSalary}
+                  onChange={(e) => setEditMemberSalary(e.target.value)}
+                />
+                <input
+                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                  id="editMemberImage"
+                  type="file"
+                  onChange={(e) =>
+                    setEditMemberImage(
+                      e.target.files ? e.target.files[0] : null
+                    )
+                  }
+                />
+                <button
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:bg-green-600 shadow-sm"
+                  onClick={updateMember}>
+                  Update Member Info
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              {member.image && (
+                <img
+                  src={`data:image/png;base64,${member.image}`}
+                  alt={member.name}
+                  className="w-16 h-16 rounded-full"
+                />
+              )}
+              <span>{member.name}</span>
+              <span>{member.work}</span>
+              <span>₹{member.salary}</span>
+              <button
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm"
+                onClick={() => editClick(member)}>
+                Edit
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
+                onClick={() => deleteClick(member.id)}>
+                Delete
+              </button>
+            </>
           )}
-          <span>{member.name}</span>
-          <span>{member.work}</span>
-          <span>{member.salary}</span>
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
-            onClick={() => deleteClick(member.id)}>
-            Delete
-          </button>
         </div>
       ))}
     </>
