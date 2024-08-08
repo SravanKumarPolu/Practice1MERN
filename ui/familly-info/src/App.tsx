@@ -75,14 +75,10 @@ function App() {
     setEditMemberName(member.name);
     setEditMemberWork(member.work);
     setEditMemberSalary(member.salary.toString());
+    setEditMemberImage(null); // Reset image file input
   };
 
   const updateMember = async () => {
-    if (!editMemberName || !editMemberWork || !editMemberSalary) {
-      console.error("Name, Work, and Salary are required.");
-      return;
-    }
-
     const formData = new FormData();
     formData.append("name", editMemberName);
     formData.append("work", editMemberWork);
