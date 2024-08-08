@@ -83,17 +83,18 @@ function App() {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("name", editMemberName);
+    formData.append("work", editMemberWork);
+    formData.append("salary", editMemberSalary);
+    if (editMemberImage) {
+      formData.append("image", editMemberImage);
+    }
+
     try {
       await fetch(API_URL + `api/familly/UpdateMembers?id=${editMemberId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: editMemberName,
-          work: editMemberWork,
-          salary: editMemberSalary,
-        }),
+        body: formData,
       });
       refreshMembers();
       setEditMemberId(null);
