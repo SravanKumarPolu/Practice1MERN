@@ -6,7 +6,7 @@ interface Member {
   name: string;
   work: string;
   salary: number;
-  image?: string; // Optional image field
+  image?: string;
 }
 
 function App() {
@@ -18,9 +18,10 @@ function App() {
 
   const [editMemberId, setEditMemberId] = useState<string | null>(null);
   const [editMemberName, setEditMemberName] = useState("");
-  const [editMemberSalary, setEditMemberSalary] = useState("");
   const [editMemberWork, setEditMemberWork] = useState("");
+  const [editMemberSalary, setEditMemberSalary] = useState("");
   const [editMemberImage, setEditMemberImage] = useState<File | null>(null);
+
   const API_URL = "http://localhost:5038/";
 
   useEffect(() => {
@@ -39,7 +40,7 @@ function App() {
 
   const addClick = async () => {
     if (!newMemberName || !newMemberWork || !newMemberSalary) {
-      console.error("Name and Work are required.");
+      console.error("Name, Work, and Salary are required.");
       return;
     }
 
@@ -72,10 +73,34 @@ function App() {
   const editClick = (member: Member) => {
     setEditMemberId(member.id);
     setEditMemberName(member.name);
+    setEditMemberWork(member.work);
     setEditMemberSalary(member.salary.toString());
   };
+
   const updateMember = async () => {
+    if (!editMemberName || !editMemberWork || !editMemberSalary) {
+      console.error("Name, Work, and Salary are required.");
+      return;
+    }
+
     try {
+      await fetch(API_URL + `api/familly/UpdateMembers?id=${editMemberId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: editMemberName,
+          work: editMemberWork,
+          salary: editMemberSalary,
+        }),
+      });
+      refreshMembers();
+      setEditMemberId(null);
+      setEditMemberName("");
+      setEditMemberWork("");
+      setEditMemberSalary("");
+      setEditMemberImage(null);
     } catch (error) {
       console.error("Error updating member:", error);
     }
@@ -113,7 +138,6 @@ function App() {
           value={newMemberWork}
           onChange={(e) => setNewMemberWork(e.target.value)}
         />
-
         <input
           className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
           id="newMemberSalary"
@@ -143,48 +167,43 @@ function App() {
           className="flex text-lg flex-col md:flex-row items-center justify-center text-center gap-5 w-full border-b py-2">
           {editMemberId === member.id ? (
             <>
-              <div className="flex flex-col md:flex-row gap-5 items-center justify-center text-center w-full">
-                <input
-                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
-                  id="editMemberName"
-                  placeholder="Name..."
-                  type="text"
-                  value={editMemberName}
-                  onChange={(e) => setEditMemberName(e.target.value)}
-                />
-                <input
-                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
-                  id="editMemberWork"
-                  placeholder="Work..."
-                  type="text"
-                  value={editMemberWork}
-                  onChange={(e) => setEditMemberWork(e.target.value)}
-                />
-
-                <input
-                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
-                  id="editMemberSalary"
-                  placeholder="Salary..."
-                  type="number"
-                  value={editMemberSalary}
-                  onChange={(e) => setEditMemberSalary(e.target.value)}
-                />
-                <input
-                  className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
-                  id="editMemberImage"
-                  type="file"
-                  onChange={(e) =>
-                    setEditMemberImage(
-                      e.target.files ? e.target.files[0] : null
-                    )
-                  }
-                />
-                <button
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:bg-green-600 shadow-sm"
-                  onClick={updateMember}>
-                  Update Member Info
-                </button>
-              </div>
+              <input
+                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                id="editMemberName"
+                placeholder="Name..."
+                type="text"
+                value={editMemberName}
+                onChange={(e) => setEditMemberName(e.target.value)}
+              />
+              <input
+                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                id="editMemberWork"
+                placeholder="Work..."
+                type="text"
+                value={editMemberWork}
+                onChange={(e) => setEditMemberWork(e.target.value)}
+              />
+              <input
+                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                id="editMemberSalary"
+                placeholder="Salary..."
+                type="number"
+                value={editMemberSalary}
+                onChange={(e) => setEditMemberSalary(e.target.value)}
+              />
+              <input
+                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                id="editMemberImage"
+                type="file"
+                onChange={(e) =>
+                  setEditMemberImage(e.target.files ? e.target.files[0] : null)
+                }
+              />
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:bg-green-600 shadow-sm"
+                onClick={updateMember}>
+                Update Member Info
+              </button>
             </>
           ) : (
             <>
