@@ -219,26 +219,28 @@ function App() {
             </>
           ) : (
             <>
-              {member.image && (
-                <img
-                  src={`data:image/png;base64,${member.image}`}
-                  alt={member.name}
-                  className="w-16 h-16 rounded-full mr-4"
-                />
-              )}
-              <span className="w-32">{member.name}</span>
-              <span className="w-32">{member.work}</span>
-              <span className="w-32">₹{member.salary}</span>
-              <button
-                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm mr-2"
-                onClick={() => editClick(member)}>
-                Edit
-              </button>
-              <button
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
-                onClick={() => deleteClick(member.id)}>
-                Delete
-              </button>
+              <div className="flex flex-row  align-middle items-center text-left ">
+                {member.image && (
+                  <img
+                    src={`data:image/png;base64,${member.image}`}
+                    alt={member.name}
+                    className="w-16 h-16 rounded-full mr-4"
+                  />
+                )}
+                <span className=" w-40 overflow-x-auto ">{member.name}</span>
+                <span className="w-40 overflow-x-auto ">{member.work}</span>
+                <span className="w-40 overflow-x-auto ">₹{member.salary}</span>
+                <button
+                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm mr-2"
+                  onClick={() => editClick(member)}>
+                  Edit
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
+                  onClick={() => deleteClick(member.id)}>
+                  Delete
+                </button>
+              </div>
             </>
           )}
         </div>
