@@ -219,13 +219,15 @@ function App() {
             </>
           ) : (
             <>
-              <div className="flex flex-row  align-middle items-center text-left ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 items-center text-center sm:text-left">
                 {member.image && (
-                  <img
-                    src={`data:image/png;base64,${member.image}`}
-                    alt={member.name}
-                    className="w-16 h-16 rounded-full mr-4"
-                  />
+                  <div className="flex justify-center items-center sm:justify-start">
+                    <img
+                      src={`data:image/png;base64,${member.image}`}
+                      alt={member.name}
+                      className="w-16 h-16 rounded-full mr-4 "
+                    />
+                  </div>
                 )}
                 <span className=" w-40 overflow-x-auto ">{member.name}</span>
                 <span className="w-40 overflow-x-auto ">{member.work}</span>
