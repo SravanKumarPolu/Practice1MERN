@@ -21,6 +21,9 @@ function App() {
   const [editMemberWork, setEditMemberWork] = useState("");
   const [editMemberSalary, setEditMemberSalary] = useState("");
   const [editMemberImage, setEditMemberImage] = useState<File | null>(null);
+  const [editMemberImageUrl, setEditMemberImageUrl] = useState<
+    string | undefined
+  >(undefined);
 
   const API_URL = "http://localhost:5038/";
 
@@ -75,6 +78,7 @@ function App() {
     setEditMemberName(member.name);
     setEditMemberWork(member.work);
     setEditMemberSalary(member.salary.toString());
+    setEditMemberImageUrl(member.image);
     setEditMemberImage(null); // Reset image file input
   };
 
@@ -85,6 +89,9 @@ function App() {
     formData.append("salary", editMemberSalary);
     if (editMemberImage) {
       formData.append("image", editMemberImage);
+    } else if (editMemberImageUrl) {
+      // If no new image, add the existing image URL to the formData
+      formData.append("existingImage", editMemberImageUrl);
     }
 
     try {
@@ -98,6 +105,7 @@ function App() {
       setEditMemberWork("");
       setEditMemberSalary("");
       setEditMemberImage(null);
+      setEditMemberImageUrl(undefined);
     } catch (error) {
       console.error("Error updating member:", error);
     }
@@ -164,6 +172,13 @@ function App() {
           className="flex text-lg flex-col md:flex-row items-center justify-center text-center gap-5 w-full border-b py-2">
           {editMemberId === member.id ? (
             <>
+              {editMemberImageUrl && !editMemberImage && (
+                <img
+                  src={`data:image/png;base64,${editMemberImageUrl}`}
+                  alt={editMemberName}
+                  className="w-16 h-16 rounded-full mr-4"
+                />
+              )}
               <input
                 className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
                 id="editMemberName"
@@ -208,14 +223,14 @@ function App() {
                 <img
                   src={`data:image/png;base64,${member.image}`}
                   alt={member.name}
-                  className="w-16 h-16 rounded-full"
+                  className="w-16 h-16 rounded-full mr-4"
                 />
               )}
-              <span>{member.name}</span>
-              <span>{member.work}</span>
-              <span>₹{member.salary}</span>
+              <span className="w-32">{member.name}</span>
+              <span className="w-32">{member.work}</span>
+              <span className="w-32">₹{member.salary}</span>
               <button
-                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm"
+                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm mr-2"
                 onClick={() => editClick(member)}>
                 Edit
               </button>

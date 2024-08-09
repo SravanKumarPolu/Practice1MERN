@@ -31,52 +31,56 @@ app.listen(PORT, () => {
 
 app.use(express.json());
 
-app.get("/api/familly/GetInfo", async (req, res) => {
-  try {
-    const documents = await database
-      .collection("famillycollection")
-      .find({})
-      .toArray();
-    res.json(documents);
-  } catch (error) {
-    console.error("Error fetching info:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+app.get("/api/familly/GetInfo", (req, res) => {
+  database
+    .collection("famillycollection")
+    .find({})
+    .toArray((error, documents) => {
+      if (error) {
+        console.error("Error fetching Info:", error);
+        res.status(500).json({ error: "Internal server error" });
+        return;
+      }
+      res.json(documents);
+    });
 });
 
-app.post(
-  "/api/familly/AddMembers",
-  upload.single("image"),
-  async (req, res) => {
-    const { name, work, salary } = req.body;
-    const imageBuffer = req.file?.buffer;
+app.post("/api/familly/AddMembers", upload.single("image"), (req, res) => {
+  const { name, work, salary } = req.body;
+  const imageBuffer = req.file?.buffer;
 
-    if (!name || !work || !salary) {
-      res.status(400).json({ error: "Name, Work, and Salary are required" });
-      return;
-    }
+  if (!name || !work || !salary) {
+    res.status(400).json({ error: "Name and Work are required" });
+    return;
+  }
 
-    try {
-      const count = await database
-        .collection("famillycollection")
-        .countDocuments({});
+  database
+    .collection("famillycollection")
+    .countDocuments({}, (error, count) => {
+      if (error) {
+        console.error("Error counting documents:", error);
+        res.status(500).json({ error: "Internal server error" });
+        return;
+      }
       const newMemberObject = {
         id: (count + 1).toString(),
         name: name,
         work: work,
-        salary: parseInt(salary),
+        salary: salary,
         image: imageBuffer ? imageBuffer.toString("base64") : null,
       };
-
-      await database.collection("famillycollection").insertOne(newMemberObject);
-      res.json({ message: "Added successfully" });
-    } catch (error) {
-      console.error("Error adding member:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  }
-);
-
+      database
+        .collection("famillycollection")
+        .insertOne(newMemberObject, (error) => {
+          if (error) {
+            console.error("Error inserting document:", error);
+            res.status(500).json({ error: "Internal server error" });
+            return;
+          }
+          res.json({ message: "Added successfully" });
+        });
+    });
+});
 app.put(
   "/api/familly/UpdateMembers",
   upload.single("image"),
@@ -96,7 +100,9 @@ app.put(
       name: name,
       work: work,
       salary: parseInt(salary),
-      image: imageBuffer ? imageBuffer.toString("base64") : req.body.image,
+      image: imageBuffer
+        ? imageBuffer.toString("base64")
+        : existingMember.image,
     };
 
     try {
@@ -114,7 +120,6 @@ app.put(
     }
   }
 );
-
 app.delete("/api/familly/DeleteMembers", (req, res) => {
   const memberId = req.query.id;
 
