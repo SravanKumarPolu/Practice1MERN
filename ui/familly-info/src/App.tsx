@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
+import person from "./assets/person.svg";
 interface Member {
   id: string;
   name: string;
@@ -176,7 +176,7 @@ function App() {
                 <img
                   src={`data:image/png;base64,${editMemberImageUrl}`}
                   alt={editMemberName}
-                  className="w-16 h-16 rounded-full mr-4"
+                  className="w-16 h-16 rounded-full mr-4 hidden"
                 />
               )}
               <input
@@ -220,25 +220,39 @@ function App() {
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 items-center text-center sm:text-left">
-                {member.image && (
+                {member.image ? (
                   <div className="flex justify-center items-center sm:justify-start">
                     <img
                       src={`data:image/png;base64,${member.image}`}
                       alt={member.name}
-                      className="w-16 h-16 rounded-full mr-4 "
+                      className="w-16 h-16 rounded-full mr-4"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center sm:justify-start">
+                    <img
+                      src={person} // Use the default person icon
+                      alt="Default Person"
+                      className="w-16 h-16 rounded-full mr-4"
                     />
                   </div>
                 )}
-                <span className=" w-40 overflow-x-auto ">{member.name}</span>
-                <span className="w-40 overflow-x-auto ">{member.work}</span>
-                <span className="w-40 overflow-x-auto ">₹{member.salary}</span>
+                <span className=" w-40 overflow-x-auto custom-scrollbar ">
+                  {member.name}
+                </span>
+                <span className="w-40 overflow-x-auto custom-scrollbar ">
+                  {member.work}
+                </span>
+                <span className="w-40  overflow-x-auto custom-scrollbar">
+                  ${member.salary}
+                </span>
                 <button
-                  className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm mr-2"
+                  className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm mr-2"
                   onClick={() => editClick(member)}>
                   Edit
                 </button>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
+                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
                   onClick={() => deleteClick(member.id)}>
                   Delete
                 </button>
