@@ -8,6 +8,7 @@
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #3b82f6; /* Thumb color */
   border-radius: 5px; /* Rounded corners */
+  cursor: pointer;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

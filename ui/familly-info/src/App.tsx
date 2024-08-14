@@ -124,11 +124,13 @@ function App() {
 
   return (
     <>
-      <h2 className="font-semibold text-3xl py-5 text-center">FAMILY Info</h2>
+      <h2 className="font-bold text-4xl py-6 text-center text-gray-800">
+        FAMILY Info
+      </h2>
 
       <div className="flex flex-col md:flex-row gap-5 items-center justify-center text-center w-full">
         <input
-          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-400"
           id="newMemberName"
           placeholder="Name..."
           type="text"
@@ -136,7 +138,7 @@ function App() {
           onChange={(e) => setNewMemberName(e.target.value)}
         />
         <input
-          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-400"
           id="newMemberWork"
           placeholder="Work..."
           type="text"
@@ -144,7 +146,7 @@ function App() {
           onChange={(e) => setNewMemberWork(e.target.value)}
         />
         <input
-          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-400"
           id="newMemberSalary"
           placeholder="Salary..."
           type="number"
@@ -152,7 +154,7 @@ function App() {
           onChange={(e) => setNewMemberSalary(e.target.value)}
         />
         <input
-          className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+          className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-blue-400"
           id="newMemberImage"
           type="file"
           onChange={(e) =>
@@ -160,7 +162,7 @@ function App() {
           }
         />
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 shadow-sm"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-md"
           onClick={addClick}>
           + Add Member
         </button>
@@ -176,11 +178,11 @@ function App() {
                 <img
                   src={`data:image/png;base64,${editMemberImageUrl}`}
                   alt={editMemberName}
-                  className="w-16 h-16 rounded-full mr-4 hidden"
+                  className="w-16 h-16 rounded-full hidden md:block"
                 />
               )}
               <input
-                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-green-400"
                 id="editMemberName"
                 placeholder="Name..."
                 type="text"
@@ -188,7 +190,7 @@ function App() {
                 onChange={(e) => setEditMemberName(e.target.value)}
               />
               <input
-                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-green-400"
                 id="editMemberWork"
                 placeholder="Work..."
                 type="text"
@@ -196,7 +198,7 @@ function App() {
                 onChange={(e) => setEditMemberWork(e.target.value)}
               />
               <input
-                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-green-400"
                 id="editMemberSalary"
                 placeholder="Salary..."
                 type="number"
@@ -204,7 +206,7 @@ function App() {
                 onChange={(e) => setEditMemberSalary(e.target.value)}
               />
               <input
-                className="w-full md:w-80 px-2 py-1 text-black rounded-sm shadow-md"
+                className="w-full md:w-80 px-4 py-2 text-gray-800 rounded-md shadow-sm border border-gray-300 focus:ring-2 focus:ring-green-400"
                 id="editMemberImage"
                 type="file"
                 onChange={(e) =>
@@ -212,7 +214,7 @@ function App() {
                 }
               />
               <button
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:bg-green-600 shadow-sm"
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 shadow-md"
                 onClick={updateMember}>
                 Update Member Info
               </button>
@@ -225,7 +227,7 @@ function App() {
                     <img
                       src={`data:image/png;base64,${member.image}`}
                       alt={member.name}
-                      className="w-16 h-16 rounded-full mr-4"
+                      className="w-16 h-16 rounded-full mr-2"
                     />
                   </div>
                 ) : (
@@ -233,7 +235,7 @@ function App() {
                     <img
                       src={person} // Use the default person icon
                       alt="Default Person"
-                      className="w-16 h-16 rounded-full mr-4"
+                      className="w-16 h-16 rounded-full mr-2"
                     />
                   </div>
                 )}
@@ -246,16 +248,18 @@ function App() {
                 <span className="w-40  overflow-x-auto custom-scrollbar">
                   ${member.salary}
                 </span>
-                <button
-                  className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 shadow-sm mr-2"
-                  onClick={() => editClick(member)}>
-                  Edit
-                </button>
-                <button
-                  className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600 shadow-sm"
-                  onClick={() => deleteClick(member.id)}>
-                  Delete
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-md"
+                    onClick={() => editClick(member)}>
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 shadow-md"
+                    onClick={() => deleteClick(member.id)}>
+                    Delete
+                  </button>
+                </div>
               </div>
             </>
           )}
