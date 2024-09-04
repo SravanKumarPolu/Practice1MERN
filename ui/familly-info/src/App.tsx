@@ -25,7 +25,7 @@ function App() {
     string | undefined
   >(undefined);
 
-  const API_URL = "http://localhost:5038/";
+  const API_URL = "http://localhost:5040/";
 
   useEffect(() => {
     refreshMembers();
