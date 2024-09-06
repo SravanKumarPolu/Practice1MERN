@@ -5,7 +5,7 @@ const multer = require("multer");
 
 const app = express();
 app.use(cors({ origin: "*" }));
-const PORT = 5040;
+const PORT = 5038;
 
 const CONNECTION_STRING =
   "mongodb+srv://admin:Yrskrmsr@cluster0.nwljkhx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";

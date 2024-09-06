@@ -25,8 +25,7 @@ function App() {
     string | undefined
   >(undefined);
 
-  const API_URL = "http://localhost:5040/";
-
+  const API_URL = "http://localhost:5038/";
   useEffect(() => {
     refreshMembers();
   }, []);
@@ -125,7 +124,7 @@ function App() {
   return (
     <>
       <h2 className="font-bold text-4xl py-6 text-center text-gray-800">
-        FAMILY Info
+        Employee Info
       </h2>
 
       <div className="flex flex-col md:flex-row gap-5 items-center justify-center text-center w-full">
